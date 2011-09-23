@@ -123,9 +123,7 @@ public final class DefaultAccessoriesPanel extends JComponent
         localFSButton.setHorizontalAlignment(SwingConstants.LEFT);
 
         buttonsPanel.add(bookmarksButton);
-        buttonsPanel.add(Box.createVerticalStrut(20));
         buttonsPanel.add(connectionsButton);
-        buttonsPanel.add(Box.createVerticalStrut(20));
         buttonsPanel.add(localFSButton);
 
         add(buttonsPanel, BorderLayout.NORTH);
