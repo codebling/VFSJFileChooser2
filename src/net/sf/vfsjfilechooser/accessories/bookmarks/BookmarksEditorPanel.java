@@ -369,15 +369,14 @@ public final class BookmarksEditorPanel extends JPanel {
 												.getMessage("VFSJFileChooser.errorHostnameRequired"))
 								.append("\n");
 					}
-				}
-
-				if( (m_username.equals("")) && (!m_password.equals("")) ){
-						errors
-								.append(
-										VFSResources
-												.getMessage("VFSJFileChooser.errorUsernameRequired"))
-								.append("\n");
-				}
+                    if( (m_username.equals("")) && (!m_password.equals("")) ){
+                        errors
+                            .append(
+                                VFSResources
+                                    .getMessage("VFSJFileChooser.errorUsernameRequired"))
+                            .append("\n");
+                    }
+                }
 
 				if (errors.length() > 0) {
 					JOptionPane.showMessageDialog(parentDialog, errors
