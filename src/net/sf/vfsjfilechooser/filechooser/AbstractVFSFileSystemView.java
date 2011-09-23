@@ -105,6 +105,11 @@ public abstract class AbstractVFSFileSystemView
      */
     public Boolean isTraversable(FileObject f)
     {
+        return Boolean.valueOf(isFileSystemRoot(f) || isComputerNode(f) || isDirectory(f));
+    }
+
+    public Boolean isDirectory(FileObject f)
+    {
         return Boolean.valueOf(VFSUtils.isDirectory(f));
     }
 

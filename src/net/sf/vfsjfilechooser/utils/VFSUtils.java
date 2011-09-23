@@ -21,9 +21,11 @@ package net.sf.vfsjfilechooser.utils;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -36,6 +38,7 @@ import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.apache.commons.vfs.provider.sftp.SftpFileSystemConfigBuilder;
+import org.stackoverflowusers.file.utils.WindowsShortcut;
 
 
 /**
@@ -80,6 +83,8 @@ public final class VFSUtils
             "VFSJFileChooser.fileSizeMegaBytes");
     private static final String gigaByteString = VFSResources.getMessage(
             "VFSJFileChooser.fileSizeGigaBytes");
+    
+    private static String osName = null;
 
     // prevent unnecessary calls
     private VFSUtils()
@@ -538,6 +543,19 @@ public final class VFSUtils
      */
     public static boolean isDirectory(FileObject fileObject)
     {
+        boolean isDir = isDirectoryFileType(fileObject);
+        
+        if (!isDir && isWindowsShortcutToDirectory(fileObject))
+        {
+            FileObject newDir = resolveWindowsShortcut(fileObject);
+            isDir = exists(newDir) && isDirectoryFileType(newDir);  //no recursive shortcuts please, thanks.
+        }
+        
+        return isDir;
+    }
+
+    private static boolean isDirectoryFileType(FileObject fileObject)
+    {
         try
         {
             return fileObject.getType().equals(FileType.FOLDER);
@@ -548,6 +566,80 @@ public final class VFSUtils
         }
     }
 
+    public static FileObject traverse(FileObject file)
+    {
+        FileObject newPath = file;
+        if (isWindowsShortcutToDirectory(file))
+        {
+            FileObject potentialNewPath = resolveWindowsShortcut(file);
+            if (potentialNewPath != null && isDirectoryFileType(potentialNewPath) && exists(potentialNewPath))
+            {
+                newPath = potentialNewPath;
+            }
+            else
+            {
+                newPath = getParentDirectory(file);
+            }
+        }
+        
+        return newPath;
+    }
+
+    private static FileObject resolveWindowsShortcut(FileObject file)
+    {
+        FileObject resolved = null;
+        try
+        {
+            if (WindowsShortcut.isPotentialValidLink(file))
+            {
+                WindowsShortcut shortcut = new WindowsShortcut(file);
+                resolved = resolveFileObject(shortcut.getRealFilename());
+            }
+        }
+        catch (IOException e)
+        {
+            //just return resolved which is already null
+        }
+        catch (ParseException e)
+        {
+            //just return resolved which is already null
+        }
+        return resolved;
+    }
+
+    public static boolean isWindowsShortcutToDirectory(FileObject fileObject)
+    {
+        try
+        {
+            return fileObject != null
+                && WindowsShortcut.isPotentialValidLink(fileObject)
+                && isWindowsOs()
+                && new WindowsShortcut(fileObject).isDirectory();
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
+        catch (ParseException e)
+        {
+            return false;
+        }
+    }
+
+    private static String getOperatingSystemName()
+    {
+        if (osName == null)
+        {
+            osName = System.getProperty("os.name");
+        }
+        return osName;
+    }
+    
+    private static boolean isWindowsOs()
+    {
+        return getOperatingSystemName().toLowerCase().startsWith("windows");
+    }
+    
     /**
      * Tells whether a folder is the root filesystem
      * @param folder A folder

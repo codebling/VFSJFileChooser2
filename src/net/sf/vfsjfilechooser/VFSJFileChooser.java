@@ -487,6 +487,8 @@ public class VFSJFileChooser extends JComponent implements Accessible
     public void setCurrentDirectory(FileObject dir)
     {
         FileObject oldValue = currentDirectory;
+        
+        dir = VFSUtils.traverse(dir);
 
         if ((dir != null) && !VFSUtils.exists(dir))
         {
@@ -497,7 +499,7 @@ public class VFSJFileChooser extends JComponent implements Accessible
         {
             dir = getFileSystemView().getDefaultDirectory();
         }
-
+        
         if (currentDirectory != null)
         {
             /* Verify the toString of object */
