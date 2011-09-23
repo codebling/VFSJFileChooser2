@@ -723,38 +723,15 @@ public class VFSJFileChooser extends JComponent implements Accessible
         putClientProperty(AccessibleContext.ACCESSIBLE_DESCRIPTION_PROPERTY,
             title);
 
-        Window window = null;
-
-        try
-        {
-            window = SwingUtilities.getWindowAncestor(parent);
-        }
-        catch (Exception ex)
-        {
-        }
+        Window window = SwingUtilities.getWindowAncestor(parent);
 
         if (window == null)
         {
-            if (parent instanceof Window)
-            {
-                window = (Window) parent;
-            }
-            else
-            {
-                window = SHARED_FRAME;
-            }
-
-            dialog = new JDialog((Frame) window, title, true);
+            window = SHARED_FRAME;
         }
-
-        else if (window instanceof Frame)
-        {
-            dialog = new JDialog((Frame) window, title, true);
-        }
-        else
-        {
-            dialog = new JDialog((Dialog) window, title, true);
-        }
+        
+        dialog = new JDialog(window, title);
+        dialog.setModal(true);
 
         dialog.setComponentOrientation(this.getComponentOrientation());
 
