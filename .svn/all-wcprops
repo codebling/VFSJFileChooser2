@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/vfsjfilechooser/!svn/ver/139/trunk
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/README.txt
+END
+LICENSE.txt
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/LICENSE.txt
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/build.xml
+END
+commons-vfs.patch
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/commons-vfs.patch
+END
+manifest.mf
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/manifest.mf
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/.project
+END
+.classpath
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/.classpath
+END

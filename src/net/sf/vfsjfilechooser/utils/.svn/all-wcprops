@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/vfsjfilechooser/!svn/ver/139/trunk/src/net/sf/vfsjfilechooser/utils
+END
+SwingCommonsUtilities.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/src/net/sf/vfsjfilechooser/utils/SwingCommonsUtilities.java
+END
+VFSUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/vfsjfilechooser/!svn/ver/139/trunk/src/net/sf/vfsjfilechooser/utils/VFSUtils.java
+END
+VFSURIValidator.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/src/net/sf/vfsjfilechooser/utils/VFSURIValidator.java
+END
+FileObjectComparatorFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/src/net/sf/vfsjfilechooser/utils/FileObjectComparatorFactory.java
+END
+VFSResources.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/src/net/sf/vfsjfilechooser/utils/VFSResources.java
+END
+VFSURIParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/src/net/sf/vfsjfilechooser/utils/VFSURIParser.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/vfsjfilechooser/!svn/ver/138/trunk/src/net/sf/vfsjfilechooser/utils/package.html
+END

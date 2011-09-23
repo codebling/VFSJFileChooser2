@@ -1,0 +1,91 @@
+application.title=JVFSFileChooser
+application.vendor=Yves Zoundi
+build.classes.dir=${build.dir}/bin
+build.classes.excludes=**/*.java,**/*.form
+# This directory is removed when the project is cleaned:
+build.dir=build
+build.generated.dir=${build.dir}/generated
+# Only compile against the classpath explicitly listed here:
+build.sysclasspath=ignore
+build.test.classes.dir=${build.dir}/test/classes
+build.test.results.dir=${build.dir}/test/results
+debug.classpath=\
+    ${run.classpath}
+debug.test.classpath=\
+    ${run.test.classpath}
+# This directory is removed when the project is cleaned:
+dist.dir=dist
+dist.jar=${dist.dir}/VFSJFileChooser-0.0.5.jar
+dist.javadoc.dir=${dist.dir}/javadoc
+excludes=
+file.reference.commons-collections-3.2.1.jar=lib/commons-collections-3.2.1.jar
+file.reference.commons-compress-20050911.jar=lib/commons-compress-20050911.jar
+file.reference.commons-httpclient-3.1.jar=lib/commons-httpclient-3.1.jar
+file.reference.commons-lang-2.4.jar=lib/commons-lang-2.4.jar
+file.reference.commons-logging-1.1.1.jar=lib/commons-logging-1.1.1.jar
+file.reference.commons-net-1.4.0.jar=lib/commons-net-1.4.0.jar
+file.reference.commons-vfs-2.0-SNAPSHOT.jar=lib/commons-vfs-2.0-SNAPSHOT.jar
+file.reference.commons-vfs-sandbox-2.0-SNAPSHOT.jar=lib/commons-vfs-sandbox-2.0-SNAPSHOT.jar
+file.reference.jcifs-1.2.9.jar=lib/jcifs-1.2.9.jar
+file.reference.jsch-0.1.39.jar=lib/jsch-0.1.39.jar
+file.reference.junit.jar=lib/junit.jar
+file.reference.oro-2.0.8.jar=lib/oro-2.0.8.jar
+file.reference.webdavclient4j-cmd-0.92.jar=lib/webdavclient4j-cmd-0.92.jar
+file.reference.webdavclient4j-core-0.92.jar=lib/webdavclient4j-core-0.92.jar
+file.reference.webdavclient4j-jca-0.92.jar=lib/webdavclient4j-jca-0.92.jar
+file.reference.webdavclient4j-vfs-0.92.jar=lib/webdavclient4j-vfs-0.92.jar
+includes=**
+jar.compress=false
+javac.classpath=\
+    ${file.reference.commons-collections-3.2.1.jar}:\
+    ${file.reference.commons-compress-20050911.jar}:\
+    ${file.reference.commons-httpclient-3.1.jar}:\
+    ${file.reference.commons-lang-2.4.jar}:\
+    ${file.reference.commons-logging-1.1.1.jar}:\
+    ${file.reference.commons-net-1.4.0.jar}:\
+    ${file.reference.commons-vfs-2.0-SNAPSHOT.jar}:\
+    ${file.reference.commons-vfs-sandbox-2.0-SNAPSHOT.jar}:\
+    ${file.reference.jcifs-1.2.9.jar}:\
+    ${file.reference.junit.jar}:\
+    ${file.reference.oro-2.0.8.jar}:\
+    ${file.reference.webdavclient4j-cmd-0.92.jar}:\
+    ${file.reference.webdavclient4j-core-0.92.jar}:\
+    ${file.reference.webdavclient4j-jca-0.92.jar}:\
+    ${file.reference.webdavclient4j-vfs-0.92.jar}:\
+    ${file.reference.jsch-0.1.39.jar}
+# Space-separated list of extra javac options
+javac.compilerargs=
+javac.deprecation=false
+javac.source=1.5
+javac.target=1.5
+javac.test.classpath=\
+    ${javac.classpath}:\
+    ${build.classes.dir}
+javadoc.additionalparam=
+javadoc.author=true
+javadoc.encoding=${source.encoding}
+javadoc.noindex=false
+javadoc.nonavbar=false
+javadoc.notree=false
+javadoc.private=false
+javadoc.splitindex=true
+javadoc.use=true
+javadoc.version=true
+javadoc.windowtitle=VFSJFileChooser API
+main.class=net.sf.vfsjfilechooser.demo.Main
+manifest.file=manifest.mf
+meta.inf.dir=${src.dir}/META-INF
+platform.active=default_platform
+run.classpath=\
+    ${javac.classpath}:\
+    ${build.classes.dir}
+# Space-separated list of JVM arguments used when running the project
+# (you may also define separate properties like run-sys-prop.name=value instead of -Dname=value
+# or test-sys-prop.name=value to set system properties for unit tests):
+run.jvmargs=
+run.test.classpath=\
+    ${javac.test.classpath}:\
+    ${build.test.classes.dir}
+source.encoding=UTF-8
+src.dir=src
+test.src.dir=test

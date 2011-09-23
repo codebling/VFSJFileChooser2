@@ -1,0 +1,433 @@
+Index: core/src/main/java/org/apache/commons/vfs/provider/http/HttpClientFactory.java
+===================================================================
+--- core/src/main/java/org/apache/commons/vfs/provider/http/HttpClientFactory.java	(revision 685982)
++++ core/src/main/java/org/apache/commons/vfs/provider/http/HttpClientFactory.java	(working copy)
+@@ -26,6 +26,7 @@
+ import org.apache.commons.vfs.UserAuthenticationData;
+ import org.apache.commons.vfs.UserAuthenticator;
+ import org.apache.commons.vfs.util.UserAuthenticatorUtils;
++import org.apache.commons.httpclient.Header;
+ 
+ /**
+  * Create a HttpClient instance
+@@ -99,7 +100,26 @@
+                 client.getState().setCredentials(null, hostname, creds);
+             }
+ 
+-            client.executeMethod(new HeadMethod());
++            HeadMethod m_method = new HeadMethod();
++            try{
++				int statusCode = client.executeMethod(m_method);
++			}
++			catch(Exception e){
++				try{
++					Header header = m_method.getResponseHeader("Location"); 
++					if (header != null) { 
++                        String redirectUrl = header.getValue();  
++                        config.setHost(new java.net.URL(redirectUrl).getHost(), config.getPort(), config.getProtocol()); 
++                        client.setHostConfiguration(config); 
++                        client.executeMethod(new HeadMethod(new java.net.URL(redirectUrl).getPath())); 
++                    
++					}
++				}
++				catch(Exception err){
++					throw err;
++				}
++				
++			}
+         }
+         catch (final Exception exc)
+         {
+Index: core/src/main/java/org/apache/commons/vfs/provider/http/HttpFileObject.java
+===================================================================
+--- core/src/main/java/org/apache/commons/vfs/provider/http/HttpFileObject.java	(revision 685982)
++++ core/src/main/java/org/apache/commons/vfs/provider/http/HttpFileObject.java	(working copy)
+@@ -16,6 +16,12 @@
+  */
+ package org.apache.commons.vfs.provider.http;
+ 
++import org.apache.commons.httpclient.HostConfiguration; 
++import org.apache.commons.httpclient.methods.HeadMethod; 
++
++import org.apache.commons.httpclient.HostConfiguration; 
++import org.apache.commons.httpclient.methods.HeadMethod; 
++
+ import org.apache.commons.httpclient.Header;
+ import org.apache.commons.httpclient.HttpClient;
+ import org.apache.commons.httpclient.HttpMethod;
+@@ -64,7 +70,6 @@
+     {
+         method = null;
+     }
+-
+     /**
+      * Determines the type of this file.  Must not return null.  The return
+      * value of this method is cached, so the implementation can be expensive.
+@@ -76,7 +81,47 @@
+         method = new HeadMethod();
+         setupMethod(method);
+         final HttpClient client = fileSystem.getClient();
+-        final int status = client.executeMethod(method);
++
++          int status = 0; 
++            try{
++				status = client.executeMethod(method); 
++			}
++			catch(Exception e){ 
++				try{
++					HostConfiguration config = client.getHostConfiguration();
++					Header header = method.getResponseHeader("Location"); 
++					if (header != null) { 
++                        String redirectUrl = header.getValue();  
++                        config.setHost(new java.net.URL(redirectUrl).getHost(), config.getPort(), config.getProtocol()); 
++                        client.setHostConfiguration(config); 
++                        status = client.executeMethod(method); 
++                    
++					} 
++				}
++				catch(Exception err){ 
++					throw new Exception(err);
++				}
++				
++			}
++			 if ((status  >= 300) && (status < 400)) {
++			 try{
++					HostConfiguration config = client.getHostConfiguration();
++					Header header = method.getResponseHeader("Location"); 
++					if (header != null) { 
++                        String redirectUrl = header.getValue();  
++						method = new HeadMethod();
++						setupMethod(method);
++                        config.setHost(new java.net.URL(redirectUrl).getHost(), config.getPort(), config.getProtocol()); 
++                        client.setHostConfiguration(config); 
++                        status = client.executeMethod(method); 
++                    
++					} 
++				}
++				catch(Exception err){ 
++					throw new Exception(err);
++				}
++			 }
++ 
+         method.releaseConnection();
+         if (status == HttpURLConnection.HTTP_OK)
+         {
+@@ -92,7 +137,6 @@
+             throw new FileSystemException("vfs.provider.http/head.error", getName());
+         }
+     }
+-
+     /**
+      * Lists the children of this file.
+      */
+Index: core/src/main/java/org/apache/commons/vfs/provider/http/HttpRandomAccesContent.java
+===================================================================
+--- core/src/main/java/org/apache/commons/vfs/provider/http/HttpRandomAccesContent.java	(revision 685982)
++++ core/src/main/java/org/apache/commons/vfs/provider/http/HttpRandomAccesContent.java	(working copy)
+@@ -22,11 +22,14 @@
+ import org.apache.commons.vfs.util.MonitorInputStream;
+ import org.apache.commons.vfs.util.RandomAccessMode;
+ 
++import org.apache.commons.httpclient.HostConfiguration;
+ import java.io.DataInputStream;
+ import java.io.FilterInputStream;
+ import java.io.IOException;
+ import java.net.HttpURLConnection;
+ 
++import org.apache.commons.httpclient.Header;
++
+ class HttpRandomAccesContent extends AbstractRandomAccessStreamContent
+ {
+     private final HttpFileObject fileObject;
+@@ -80,10 +83,36 @@
+             return dis;
+         }
+ 
+-        final GetMethod getMethod = new GetMethod();
++        GetMethod getMethod = new GetMethod();
+         fileObject.setupMethod(getMethod);
+         getMethod.setRequestHeader("Range", "bytes=" + filePointer + "-");
+-        final int status = fileSystem.getClient().executeMethod(getMethod);
++        int status = 0;
++		
++		try{
++			status = fileSystem.getClient().executeMethod(getMethod);
++		}
++		catch(Exception e){
++			try{
++					Header header = getMethod.getResponseHeader("Location");
++					if (header != null) {
++                    
++                        String redirectUrl = header.getValue();  
++HostConfiguration config =                        fileSystem.getClient().getHostConfiguration(); 
++config.setHost(new java.net.URL(redirectUrl).getHost(), config.getPort(), config.getProtocol());
++ getMethod = new GetMethod();
++       fileObject.setupMethod(getMethod);
++ getMethod.setPath(new java.net.URL(redirectUrl).getPath()); 
++ fileSystem.getClient().setHostConfiguration(config);
++                          status =  fileSystem.getClient().executeMethod(getMethod); 
++                    
++					} 
++				}
++				catch(Exception err){
++					 
++				}
++		}
++
++
+         if (status != HttpURLConnection.HTTP_PARTIAL)
+         {
+             throw new FileSystemException("vfs.provider.http/get-range.error", new Object[]
+@@ -131,6 +160,8 @@
+ 	}
+ 
+ 
++
++
+     public void close() throws IOException
+     {
+         if (dis != null)
+Index: core/src/main/java/org/apache/commons/vfs/provider/http/ThreadLocalHttpConnectionManager.java
+===================================================================
+--- core/src/main/java/org/apache/commons/vfs/provider/http/ThreadLocalHttpConnectionManager.java	(revision 685982)
++++ core/src/main/java/org/apache/commons/vfs/provider/http/ThreadLocalHttpConnectionManager.java	(working copy)
+@@ -19,6 +19,7 @@
+ import org.apache.commons.httpclient.HostConfiguration;
+ import org.apache.commons.httpclient.HttpConnection;
+ import org.apache.commons.httpclient.HttpConnectionManager;
++import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
+@@ -40,26 +41,40 @@
+  */
+ public class ThreadLocalHttpConnectionManager implements HttpConnectionManager
+ {
+-    private static class ConnectionParameters
+-    {
+-        private boolean staleCheck;
++	
++/*
++ * Revision 209275 was compatible with HttpClient 3.0.1
++ * Revision 209411 reverted back to HttpClient 2.0.2 
++ * on the basis that HttpClient 3.0-rc3 and WebDavLib were not compatible,
++ * which was the case at the time (July 2005), but ceased being the case
++ * in Dec 2006 - see https://issues.apache.org/bugzilla/show_bug.cgi?id=35213
++ * 
++ * This version effectively applies the patch which takes you 
++ * from 209411 to 209275.
++ * 
++ */
++	
++	
++//    private static class ConnectionParameters
++//    {
++//        private boolean staleCheck;
++//
++//        public boolean isStaleCheckingEnabled()
++//        {
++//            return staleCheck;
++//        }
++//
++//        public void setStaleCheckingEnabled(boolean b)
++//        {
++//            staleCheck = b;
++//        }
++//
++//        public void populateParameters(HttpConnection connection)
++//        {
++//            connection.setStaleCheckingEnabled(staleCheck);
++//        }
++//    }
+ 
+-        public boolean isStaleCheckingEnabled()
+-        {
+-            return staleCheck;
+-        }
+-
+-        public void setStaleCheckingEnabled(boolean b)
+-        {
+-            staleCheck = b;
+-        }
+-
+-        public void populateParameters(HttpConnection connection)
+-        {
+-            connection.setStaleCheckingEnabled(staleCheck);
+-        }
+-    }
+-
+     /**
+      * Since the same connection is about to be reused, make sure the
+      * previous request was completely processed, and if not
+@@ -99,7 +114,8 @@
+     /**
+      * Collection of parameters associated with this connection manager.
+      */
+-    private ConnectionParameters params = new ConnectionParameters();
++    //private ConnectionParameters params = new ConnectionParameters();
++    private HttpConnectionManagerParams params = new HttpConnectionManagerParams();
+ 
+     /**
+      * release the connection of the current thread
+@@ -181,7 +197,7 @@
+     }
+ 
+     /**
+-     * @see HttpConnectionManager#getConnection(HostConfiguration, long)
++     * @see HttpConnectionManager#getConnectionWithTimeout(HostConfiguration, long)
+      * @since 3.0
+      */
+     public HttpConnection getConnectionWithTimeout(
+@@ -194,7 +210,9 @@
+             httpConnection = new HttpConnection(hostConfiguration);
+             setLocalHttpConnection(httpConnection);
+             httpConnection.setHttpConnectionManager(this);
+-            this.params.populateParameters(httpConnection);
++//            this.params.populateParameters(httpConnection);
++            httpConnection.getParams().setDefaults(this.params);
++            
+         }
+         else
+         {
+@@ -257,6 +275,34 @@
+     }
+ 
+     /**
++     * Returns {@link HttpConnectionManagerParams parameters} associated
++     * with this connection manager.
++     *
++     * @see HttpConnectionManagerParams
++     * @since 2.1
++     */
++    public HttpConnectionManagerParams getParams()
++    {
++        return this.params;
++    }
++
++    /**
++     * Assigns {@link HttpConnectionManagerParams parameters} for this
++     * connection manager.
++     *
++     * @see HttpConnectionManagerParams
++     * @since 2.1
++     */
++    public void setParams(final HttpConnectionManagerParams params)
++    {
++        if (params == null)
++        {
++            throw new IllegalArgumentException("Parameters may not be null");
++        }
++        this.params = params;
++    }    
++    
++    /**
+      * @since 3.0
+      */
+     public void closeIdleConnections(long idleTimeout)
+Index: core/src/main/java/org/apache/commons/vfs/provider/AbstractFileObject.java
+===================================================================
+--- core/src/main/java/org/apache/commons/vfs/provider/AbstractFileObject.java	(revision 685982)
++++ core/src/main/java/org/apache/commons/vfs/provider/AbstractFileObject.java	(working copy)
+@@ -1407,6 +1407,7 @@
+             }
+             catch (Exception exc)
+             {
++            	exc.printStackTrace();
+                 throw new FileSystemException("vfs.provider/get-type.error", new Object[]{name}, exc);
+             }
+ 
+Index: core/pom.xml
+===================================================================
+--- core/pom.xml	(revision 685982)
++++ core/pom.xml	(working copy)
+@@ -38,7 +38,7 @@
+ 		<dependency>
+ 			<groupId>commons-logging</groupId>
+ 			<artifactId>commons-logging</artifactId>
+-			<version>1.0.4</version>
++			<version>1.1.1</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>ant</groupId>
+@@ -74,7 +74,7 @@
+ 		<dependency>
+ 			<groupId>commons-httpclient</groupId>
+ 			<artifactId>commons-httpclient</artifactId>
+-			<version>2.0.2</version>
++			<version>3.0.1</version>
+ 			<optional>true</optional>
+ 		</dependency>
+ 		<dependency>
+Index: sandbox/src/main/java/org/apache/commons/vfs/provider/webdav/WebdavFileObject.java
+===================================================================
+--- sandbox/src/main/java/org/apache/commons/vfs/provider/webdav/WebdavFileObject.java	(revision 685982)
++++ sandbox/src/main/java/org/apache/commons/vfs/provider/webdav/WebdavFileObject.java	(working copy)
+@@ -110,6 +110,8 @@
+      */
+     private void setDavResource(WebdavResource resource) throws Exception
+     {
++    	System.out.println("In setDavResource");
++    	
+         redirectionResolved = false;
+ 
+         final URLFileName name = (URLFileName) getName();
+@@ -156,7 +158,9 @@
+                 }
+                 // handle the (maybe) redirected url
+                 redirectionResolved = true;
+-                resource.getHttpURL().setEscapedPath(optionsMethod.getURI().getPath());
++                System.out.println(optionsMethod.getURI().getPath());
++//                resource.getHttpURL().setEscapedPath(optionsMethod.getURI().getPath());
++                resource.getHttpURL().setEscapedPath(optionsMethod.getURI().getEscapedPath());
+ 
+                 setAllowedMethods(optionsMethod.getAllowedMethods());
+                 boolean exists = false;
+@@ -183,6 +187,8 @@
+                 }
+                 catch (IOException e)
+                 {
++                	e.printStackTrace();
++                	
+                     throw new FileSystemException(e);
+                 }
+             }
+Index: sandbox/src/main/resources/META-INF/vfs-providers.xml
+===================================================================
+--- sandbox/src/main/resources/META-INF/vfs-providers.xml	(revision 685982)
++++ sandbox/src/main/resources/META-INF/vfs-providers.xml	(working copy)
+@@ -4,12 +4,12 @@
+ 		<scheme name="smb"/>
+ 		<if-available class-name="jcifs.smb.SmbFile"/>
+ 	</provider>
+-
++<!-- webdavclient4j provide the registration
+ 	<provider class-name="org.apache.commons.vfs.provider.webdav.WebdavFileProvider">
+ 		<scheme name="webdav"/>
+ 		<if-available class-name="org.apache.webdav.lib.WebdavResource"/>
+ 		<if-available class-name="org.apache.commons.httpclient.HttpClient"/>
+-	</provider>
++	</provider> -->
+ 	
+ 	<provider class-name="org.apache.commons.vfs.provider.mime.MimeFileProvider">
+ 		<scheme name="mime"/>
+Index: sandbox/pom.xml
+===================================================================
+--- sandbox/pom.xml	(revision 685982)
++++ sandbox/pom.xml	(working copy)
+@@ -50,6 +50,7 @@
+ 		<dependency>
+ 			<groupId>slide</groupId>
+ 			<artifactId>jakarta-slide-webdavlib</artifactId>
++			<!-- FIXME: this snapshot is too old; you need one from Dec 06 or later --> 
+ 			<version>20050629.161100</version>
+ 			<optional>true</optional>
+ 		</dependency>
+@@ -62,7 +63,7 @@
+ 		<dependency>
+ 			<groupId>commons-httpclient</groupId>
+ 			<artifactId>commons-httpclient</artifactId>
+-			<version>2.0.2</version>
++			<version>3.1</version>
+ 			<optional>true</optional>
+ 		</dependency>
+ 		<dependency>
