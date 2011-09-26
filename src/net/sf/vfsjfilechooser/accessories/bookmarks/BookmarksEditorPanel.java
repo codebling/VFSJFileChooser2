@@ -35,20 +35,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import net.sf.vfsjfilechooser.accessories.connection.Credentials;
 import net.sf.vfsjfilechooser.accessories.connection.Protocol;
@@ -227,9 +214,7 @@ public final class BookmarksEditorPanel extends JPanel {
 
 		JLabel protocolLabel = new JLabel(VFSResources
 				.getMessage("VFSJFileChooser.protocolLabelText"));
-		DefaultComboBoxModel protocolModel = new DefaultComboBoxModel(Protocol
-				.values());
-		this.protocolList = new JComboBox(protocolModel);
+		this.protocolList = new JComboBox<Protocol>(Protocol.values());
 		this.protocolList.setRenderer(new ProtocolRenderer());
 
 		this.usernameLabel = new JLabel(VFSResources
@@ -550,26 +535,16 @@ public final class BookmarksEditorPanel extends JPanel {
 		this.buttonsPanel.add(this.cancelButton);
 	}
 
-	private static class ProtocolRenderer extends BasicComboBoxRenderer {
+	private static class ProtocolRenderer extends BasicComboBoxRenderer //implements ListCellRenderer<Protocol> {
+    {
 		@Override
-		public Component getListCellRendererComponent(JList list, Object value,
+		public Component getListCellRendererComponent(JList list, Object value, //Protocol value,
 				int index, boolean isSelected, boolean cellHasFocus) {
-			if (isSelected) {
-				setBackground(list.getSelectionBackground());
-				setForeground(list.getSelectionForeground());
-
-				if (-1 < index) {
-					Protocol aProtocol = (Protocol) value;
-					list.setToolTipText(aProtocol.getDescription());
-				}
-			} else {
-				setBackground(list.getBackground());
-				setForeground(list.getForeground());
-			}
-
-			setFont(list.getFont());
-			setText((value == null) ? "" : value.toString());
-
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof Protocol)
+            {
+                list.setToolTipText(((Protocol)value).getDescription());
+            }
 			return this;
 		}
 	}
