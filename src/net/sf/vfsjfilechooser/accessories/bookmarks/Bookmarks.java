@@ -273,7 +273,7 @@ public class Bookmarks extends AbstractTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		return false;
+		return true;
 	}
 
 	/*

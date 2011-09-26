@@ -17,24 +17,11 @@
  */
 package net.sf.vfsjfilechooser.accessories.bookmarks;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
+
 import net.sf.vfsjfilechooser.VFSJFileChooser;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
@@ -59,6 +46,7 @@ public class BookmarksManagerPanel extends JPanel
     private JButton bOpen;
     private JButton bCancel;
     private JButton bEdit;
+    private JButton bInlineEdit;
     private JButton bAdd;
     private JButton bDelete;
     private JButton bMoveUp;
@@ -105,6 +93,8 @@ public class BookmarksManagerPanel extends JPanel
                                         .getResource("/net/sf/vfsjfilechooser/plaf/icons/book_edit.png")));
         bEdit.setHorizontalAlignment(SwingConstants.LEFT);
 
+        bInlineEdit = new JButton("...");
+
         bDelete = new JButton(VFSResources.getMessage(
                     "VFSJFileChooser.deleteButtonText"));
         bDelete.setIcon(new ImageIcon(getClass()
@@ -128,6 +118,7 @@ public class BookmarksManagerPanel extends JPanel
         bOpen.addActionListener(ah);
         bCancel.addActionListener(ah);
         bEdit.addActionListener(ah);
+        bInlineEdit.addActionListener(ah);
         bAdd.addActionListener(ah);
         bDelete.addActionListener(ah);
         bMoveUp.addActionListener(ah);
@@ -158,6 +149,16 @@ public class BookmarksManagerPanel extends JPanel
         add(south, BorderLayout.SOUTH);
         add(east, BorderLayout.EAST);
 
+//        editingTextField = new JTextField();
+//        JPanel editorPanel = new JPanel();
+//        editorPanel.add(editingTextField);
+//        editorPanel.add(bEdit);
+//        editorPanel.add(new JButton)
+        BookmarkCellEditor b = new BookmarkCellEditor(bInlineEdit);
+        table.setDefaultEditor(String.class, b);
+        table.setDefaultEditor(Object.class, b);
+        table.setCellEditor(b);
+
         setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10,
                 UIManager.getColor("Panel.background")));
     }
@@ -184,7 +185,7 @@ public class BookmarksManagerPanel extends JPanel
             {
                 parentDialog.showEditorView(NO_BOOKMARK_SELECTION_INDEX);
             }
-            else if (button.equals(bEdit))
+            else if (button.equals(bEdit) || button.equals(bInlineEdit))
             {
                 if (row != NO_BOOKMARK_SELECTION_INDEX)
                 {
@@ -353,4 +354,62 @@ public class BookmarksManagerPanel extends JPanel
             }
         }
     } // inner class ActionHandler
+
+    public static class BookmarkCellEditor extends DefaultCellEditor
+    {
+        JPanel p = new JPanel();
+        JButton b;
+        JTextField tf;
+
+        public BookmarkCellEditor(JButton b)
+        {
+            super(new JTextField());
+            tf = (JTextField) editorComponent;
+            tf.setEditable(true);
+            p.setLayout(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+
+            c.gridx = 0;
+            c.gridy = 0;
+            c.anchor = GridBagConstraints.LINE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 1.0;
+            c.ipadx = 0;
+            c.insets = new Insets(0, 0, 0, 0);
+            p.add(tf, c);
+            
+            c.gridx = 1;
+            c.anchor = GridBagConstraints.LINE_END;
+            c.fill = GridBagConstraints.NONE;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.0;
+            p.add(b, c);
+        }
+
+        @Override
+        public Component getComponent()
+        {
+            return p;
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
+        {
+            if (value instanceof String)
+            {
+                tf.setText((String)value);
+            }
+            return getComponent();
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return tf.getText();
+        }
+
+
+    }
 }
