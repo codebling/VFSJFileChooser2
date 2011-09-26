@@ -129,7 +129,7 @@ public class BookmarksManagerPanel extends JPanel
         south.add(bCancel);
         south.add(Box.createHorizontalGlue());
 
-        final JPanel buttons = new JPanel(new GridLayout(0, 1, 5, 5));
+        final JPanel buttons = new JPanel(new GridLayout(0, 1, 3, 3));
 
         buttons.add(bAdd);
         buttons.add(bEdit);
@@ -139,21 +139,12 @@ public class BookmarksManagerPanel extends JPanel
         buttons.add(bMoveUp);
         buttons.add(bMoveDown);
 
-        JPanel east = new JPanel();
-        east.add(buttons, BorderLayout.NORTH);
-        east.add(new JPanel(), BorderLayout.CENTER); // don't ask
-
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout(10, 3));
 
         add(scrollPane, BorderLayout.CENTER);
         add(south, BorderLayout.SOUTH);
-        add(east, BorderLayout.EAST);
+        add(buttons, BorderLayout.EAST);
 
-//        editingTextField = new JTextField();
-//        JPanel editorPanel = new JPanel();
-//        editorPanel.add(editingTextField);
-//        editorPanel.add(bEdit);
-//        editorPanel.add(new JButton)
         BookmarkCellEditor b = new BookmarkCellEditor(bInlineEdit);
         table.setDefaultEditor(String.class, b);
         table.setDefaultEditor(Object.class, b);
