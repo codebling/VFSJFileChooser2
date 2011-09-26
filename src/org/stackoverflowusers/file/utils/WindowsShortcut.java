@@ -43,13 +43,12 @@ public class WindowsShortcut
      */
     public static boolean isPotentialValidLink(FileObject file) throws IOException {
         final int minimum_length = 0x64;
-        byte[] bytes = getBytes(file.getContent().getInputStream());
+        InputStream fis = file.getContent().getInputStream();
         return file.getType().equals(FileType.FILE)
             && file.getName().getExtension().toLowerCase().equals("lnk")
-            && bytes.length >= minimum_length
-            && isMagicPresent(bytes);
+            && fis.available() >= minimum_length
+            && isMagicPresent(getBytes(fis));
     }
-
 
     public WindowsShortcut(File file) throws IOException, ParseException {
         parseLink(getBytes(new FileInputStream(file)));
