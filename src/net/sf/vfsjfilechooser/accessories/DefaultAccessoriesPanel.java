@@ -23,7 +23,7 @@ import net.sf.vfsjfilechooser.accessories.connection.ConnectionDialog;
 import net.sf.vfsjfilechooser.utils.SwingCommonsUtilities;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;

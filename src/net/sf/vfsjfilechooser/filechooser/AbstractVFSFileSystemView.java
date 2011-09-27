@@ -21,10 +21,10 @@ package net.sf.vfsjfilechooser.filechooser;
 import net.sf.vfsjfilechooser.utils.SwingCommonsUtilities;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.impl.DecoratedFileObject;
-import org.apache.commons.vfs.provider.local.LocalFile;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.impl.DecoratedFileObject;
+import org.apache.commons.vfs2.provider.local.LocalFile;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -233,7 +233,7 @@ public abstract class AbstractVFSFileSystemView
      * Creates a new folder with a default folder name.
      * @param containingDir
      * @return
-     * @throws org.apache.commons.vfs.FileSystemException
+     * @throws org.apache.commons.vfs2.FileSystemException
      */
     public abstract FileObject createNewFolder(FileObject containingDir)
         throws FileSystemException;

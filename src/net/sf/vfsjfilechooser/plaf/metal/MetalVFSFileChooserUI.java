@@ -33,8 +33,8 @@ import net.sf.vfsjfilechooser.plaf.basic.BasicVFSFileChooserUI;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

@@ -59,9 +59,9 @@ import net.sf.vfsjfilechooser.accessories.connection.Credentials.Builder;
 import net.sf.vfsjfilechooser.filechooser.PopupHandler;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
 
 
 /**

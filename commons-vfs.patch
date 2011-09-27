@@ -3,9 +3,9 @@ Index: core/src/main/java/org/apache/commons/vfs/provider/http/HttpClientFactory
 --- core/src/main/java/org/apache/commons/vfs/provider/http/HttpClientFactory.java	(revision 685982)
 +++ core/src/main/java/org/apache/commons/vfs/provider/http/HttpClientFactory.java	(working copy)
 @@ -26,6 +26,7 @@
- import org.apache.commons.vfs.UserAuthenticationData;
- import org.apache.commons.vfs.UserAuthenticator;
- import org.apache.commons.vfs.util.UserAuthenticatorUtils;
+ import org.apache.commons.vfs2.UserAuthenticationData;
+ import org.apache.commons.vfs2.UserAuthenticator;
+ import org.apache.commons.vfs2.util.UserAuthenticatorUtils;
 +import org.apache.commons.httpclient.Header;
  
  /**
@@ -44,7 +44,7 @@ Index: core/src/main/java/org/apache/commons/vfs/provider/http/HttpFileObject.ja
 +++ core/src/main/java/org/apache/commons/vfs/provider/http/HttpFileObject.java	(working copy)
 @@ -16,6 +16,12 @@
   */
- package org.apache.commons.vfs.provider.http;
+ package org.apache.commons.vfs2.provider.http;
  
 +import org.apache.commons.httpclient.HostConfiguration; 
 +import org.apache.commons.httpclient.methods.HeadMethod; 
@@ -125,8 +125,8 @@ Index: core/src/main/java/org/apache/commons/vfs/provider/http/HttpRandomAccesCo
 --- core/src/main/java/org/apache/commons/vfs/provider/http/HttpRandomAccesContent.java	(revision 685982)
 +++ core/src/main/java/org/apache/commons/vfs/provider/http/HttpRandomAccesContent.java	(working copy)
 @@ -22,11 +22,14 @@
- import org.apache.commons.vfs.util.MonitorInputStream;
- import org.apache.commons.vfs.util.RandomAccessMode;
+ import org.apache.commons.vfs2.util.MonitorInputStream;
+ import org.apache.commons.vfs2.util.RandomAccessMode;
  
 +import org.apache.commons.httpclient.HostConfiguration;
  import java.io.DataInputStream;
@@ -408,7 +408,7 @@ Index: sandbox/src/main/resources/META-INF/vfs-providers.xml
 -	</provider>
 +	</provider> -->
  	
- 	<provider class-name="org.apache.commons.vfs.provider.mime.MimeFileProvider">
+ 	<provider class-name="org.apache.commons.vfs2.provider.mime.MimeFileProvider">
  		<scheme name="mime"/>
 Index: sandbox/pom.xml
 ===================================================================
