@@ -17,7 +17,7 @@
  */
 package net.sf.vfsjfilechooser.filechooser;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 
 
 /**

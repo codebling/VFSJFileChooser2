@@ -23,8 +23,8 @@ import net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants;
 import net.sf.vfsjfilechooser.filechooser.AbstractVFSFileSystemView;
 import net.sf.vfsjfilechooser.plaf.metal.MetalVFSFileChooserUI;
 import net.sf.vfsjfilechooser.utils.FileObjectComparatorFactory;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 
 import javax.swing.AbstractListModel;
 import javax.swing.SwingUtilities;
