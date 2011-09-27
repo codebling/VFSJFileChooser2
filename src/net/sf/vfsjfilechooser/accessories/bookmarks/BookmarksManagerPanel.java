@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+import javax.swing.table.DefaultTableCellRenderer;
 import net.sf.vfsjfilechooser.VFSJFileChooser;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
@@ -149,9 +150,10 @@ public class BookmarksManagerPanel extends JPanel
         table.setDefaultEditor(String.class, b);
         table.setDefaultEditor(Object.class, b);
         table.setCellEditor(b);
+        table.setDefaultRenderer(Object.class, new BookmarkCellRenderer());
 
         setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10,
-                UIManager.getColor("Panel.background")));
+            UIManager.getColor("Panel.background")));
     }
 
     public Bookmarks getModel()
@@ -348,15 +350,19 @@ public class BookmarksManagerPanel extends JPanel
 
     public static class BookmarkCellEditor extends DefaultCellEditor
     {
+        static JLabel borderStyleSource = new JLabel();
         JPanel p = new JPanel();
-        JButton b;
+        static JButton b = new JButton("...");
         JTextField tf;
 
-        public BookmarkCellEditor(JButton b)
+        public BookmarkCellEditor(JButton button)
         {
             super(new JTextField());
+            setClickCountToStart(1);
             tf = (JTextField) editorComponent;
             tf.setEditable(true);
+            tf.setBorder(borderStyleSource.getBorder());
+
             p.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
 
@@ -392,6 +398,7 @@ public class BookmarksManagerPanel extends JPanel
             if (value instanceof String)
             {
                 tf.setText((String)value);
+                b.setVisible(isSelected && column == 1);
             }
             return getComponent();
         }
@@ -402,5 +409,26 @@ public class BookmarksManagerPanel extends JPanel
         }
 
 
+    }
+    
+    public class BookmarkCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                                                       Object value,
+                                                       boolean isSelected,
+                                                       boolean hasFocus,
+                                                       int row,
+                                                       int column)
+        {
+            return new BookmarkCellEditor(null).getTableCellEditorComponent(table, value, isSelected, row, column);
+                /*
+                super.getTableCellRendererComponent(table,
+                value,
+                isSelected,
+                hasFocus,
+                row,
+                column);    //To change body of overridden methods use File | Settings | File Templates.
+                */
+        }
     }
 }
