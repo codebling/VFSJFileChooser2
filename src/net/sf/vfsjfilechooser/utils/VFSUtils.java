@@ -83,8 +83,6 @@ public final class VFSUtils
             "VFSJFileChooser.fileSizeMegaBytes");
     private static final String gigaByteString = VFSResources.getMessage(
             "VFSJFileChooser.fileSizeGigaBytes");
-    
-    private static String osName = null;
 
     // prevent unnecessary calls
     private VFSUtils()
@@ -613,7 +611,6 @@ public final class VFSUtils
         {
             return fileObject != null
                 && WindowsShortcut.isPotentialValidLink(fileObject)
-                && isWindowsOs()
                 && new WindowsShortcut(fileObject).isDirectory();
         }
         catch (IOException e)
@@ -626,20 +623,6 @@ public final class VFSUtils
         }
     }
 
-    private static String getOperatingSystemName()
-    {
-        if (osName == null)
-        {
-            osName = System.getProperty("os.name");
-        }
-        return osName;
-    }
-    
-    private static boolean isWindowsOs()
-    {
-        return getOperatingSystemName().toLowerCase().startsWith("windows");
-    }
-    
     /**
      * Tells whether a folder is the root filesystem
      * @param folder A folder
