@@ -259,8 +259,7 @@ public class Bookmarks extends AbstractTableModel {
 			if (col == 0) {
 				obj = getEntry(row).getTitle();
 			} else if (col == 1) {
-				obj = getEntry(row).getURL();
-			}
+                obj = UrlUtil.removePasswordFromUrl(getEntry(row).getURL());	            			}
 		}
 
 		return obj;
