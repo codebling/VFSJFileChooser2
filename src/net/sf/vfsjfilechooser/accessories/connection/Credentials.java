@@ -19,6 +19,9 @@
 package net.sf.vfsjfilechooser.accessories.connection;
 
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 /**
  * Representation of users credentials
  * @author Yves Zoundi <yveszoundi at users dot sf dot net>
@@ -55,37 +58,16 @@ public class Credentials
     /**
      * @return the complete path of the directory to browse
      */
-    public String toFileObjectURL()
+    public String toFileObjectURL() throws URISyntaxException
     {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(protocol.toLowerCase());
-        sb.append("://");
-
-        if (!protocol.toLowerCase().equals("file"))
-        {
-            if (!("".equals(username.trim())))
-            {
-                sb.append(this.username);
-
-                if (password.length != 0)
-                {
-                    sb.append(":");
-                    sb.append(this.password);
-                }
-
-                sb.append("@");
-            }
-
-            sb.append(this.hostname);
-
-            if (port != -1)
-            {
-                sb.append(":").append(this.port);
-            }
-        }
-
-        return sb.append(defaulRemotetPath).toString();
+        return new URI (protocol,
+                        new StringBuffer().append(username).append(":").append(password).toString(),
+                        hostname,
+                        port != -1 ? port : null,
+                        defaulRemotetPath,
+                        null,
+                        null)
+                .toASCIIString();
     }
 
     /**
