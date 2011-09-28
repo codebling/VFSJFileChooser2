@@ -33,6 +33,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import javax.swing.*;
@@ -44,6 +45,8 @@ import net.sf.vfsjfilechooser.filechooser.PopupHandler;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import net.sf.vfsjfilechooser.utils.VFSURIValidator;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 
 /**
  * The connection dialog
@@ -399,45 +402,53 @@ public final class BookmarksEditorPanel extends JPanel {
 
 				Credentials credentials = credentialsBuilder.build();
 
-				String uri = credentials.toFileObjectURL();
+				String uri = null;
 
-		 		//sl start
-				VFSURIValidator v = new VFSURIValidator();
-				if(! v.isValid(uri)){
-					//popup a warning
-					JOptionPane.showMessageDialog(null,VFSResources.getMessage("VFSFileChooser.errBADURI"));
-					//System.out.println("BookmarksEditorPanel -- bad uri="+uri+"=");
-				}
-				else {
-					//System.out.println("BookmarksEditorPanel -- good uri="+uri+"=");
-				}
-		 		//sl stop
-				if (editIndex == -1) {
-					final TitledURLEntry tue;
-					if (Protocol.FTP.equals(protocolList.getSelectedItem())) {
-                        tue = new FTPURLEntry(bookmarkName, uri, passiveFtpOption.isSelected());
-					}
-					else {
-	                    tue = new TitledURLEntry(bookmarkName, uri);
-					}
-                    bookmarks.add(tue);
-				}
-				else {
-					bookmarks.setValueAt(bookmarkName, editIndex, 0);
-					bookmarks.setValueAt(uri, editIndex, 1);
+                String errorMessage = null;
+                try
+                {
+                    uri = credentials.toFileObjectURL();
+                }
+                catch (URISyntaxException ex)
+                {
+                    errorMessage = ex.getMessage() + ex.getReason();
+                }
 
-					// update the passive mode option for FTP entries only
-					// this is *not* a graphical option so we don't need to fire a table update
-					TitledURLEntry entry = bookmarks.getEntry(editIndex);
-					if (entry instanceof FTPURLEntry) {
-					    FTPURLEntry ftpEntry = (FTPURLEntry) entry;
-					    ftpEntry.setPassiveFtp(passiveFtpOption.isSelected());
-					}
-				}
+                VFSURIValidator v = new VFSURIValidator();
+                if (!v.isValid(uri))
+                {
+                    errorMessage = VFSResources.getMessage("VFSFileChooser.errBADURI");
+                }
+				if(errorMessage != null) {
+					JOptionPane.showMessageDialog(null, errorMessage);
+				} else {
+                    if (editIndex == -1) {
+                        final TitledURLEntry tue;
+                        if (Protocol.FTP.equals(protocolList.getSelectedItem())) {
+                            tue = new FTPURLEntry(bookmarkName, uri, passiveFtpOption.isSelected());
+                        }
+                        else {
+                            tue = new TitledURLEntry(bookmarkName, uri);
+                        }
+                        bookmarks.add(tue);
+                    }
+                    else {
+                        bookmarks.setValueAt(bookmarkName, editIndex, 0);
+                        bookmarks.setValueAt(uri, editIndex, 1);
 
-				bookmarks.save(); // sl
+                        // update the passive mode option for FTP entries only
+                        // this is *not* a graphical option so we don't need to fire a table update
+                        TitledURLEntry entry = bookmarks.getEntry(editIndex);
+                        if (entry instanceof FTPURLEntry) {
+                            FTPURLEntry ftpEntry = (FTPURLEntry) entry;
+                            ftpEntry.setPassiveFtp(passiveFtpOption.isSelected());
+                        }
+                    }
 
-				parentDialog.restoreDefaultView();
+                    bookmarks.save(); // sl
+
+                    parentDialog.restoreDefaultView();
+                }
 			}
 		});
 

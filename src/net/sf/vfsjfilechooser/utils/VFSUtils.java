@@ -50,6 +50,7 @@ import org.stackoverflowusers.file.utils.WindowsShortcut;
  */
 public final class VFSUtils
 {
+    public static final String VFS_IDENTITIES = "vfs.Identities";
     /**
      * The number of bytes in a kilobyte.
      */
@@ -464,6 +465,18 @@ public final class VFSUtils
             {
                 SftpFileSystemConfigBuilder.getInstance()
                                            .setStrictHostKeyChecking(opts, "no");
+                String idFiles = System.getProperty(VFS_IDENTITIES, "");
+                if (idFiles.length()>0)
+                {
+                    String[] split = idFiles.split(",");
+
+                    File[] identities = new File[split.length];
+                    for (int i = 0; i < identities.length; i++)
+                    {
+                        identities[i] = new File(split[i].trim());
+                    }
+                    SftpFileSystemConfigBuilder.getInstance().setIdentities(opts, identities);
+                }
             }
 
             return getFileSystemManager().resolveFile(filePath, opts);

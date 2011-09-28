@@ -285,6 +285,13 @@ public class BookmarksManagerPanel extends JPanel
                 }
                 else
                 {
+                    int showConfirmDialog = JOptionPane.showConfirmDialog(bDelete,
+                	    VFSResources.getMessage("VFSJFileChooser.areYouSureToDeleteConnections"),
+                	    VFSResources.getMessage("VFSJFileChooser.confirm"),JOptionPane.YES_NO_OPTION);
+                    if (showConfirmDialog==JOptionPane.NO_OPTION)
+                    {
+                	    return;
+                    }
                     for (int i = rows.length - 1; i >= 0; i--)
                     {
                         model.delete(rows[i]);

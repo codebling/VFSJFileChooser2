@@ -57,6 +57,7 @@ final class BookmarksReader {
 	public BookmarksReader(File bookmarksFile) {
 		entries = new ArrayList<TitledURLEntry>();
 		Reader reader = null;
+        InputStream is = null;
 		try {
 			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 			xmlReader.setContentHandler(new BookmarksHandler());
@@ -71,7 +72,7 @@ final class BookmarksReader {
 			if ((code[0] == 'b') && (code[1] == '1')) {
 				logger.log(Level.FINEST, "in encrypted code section");
 				// read the encrypted file
-				InputStream is = new FileInputStream(bookmarksFile);
+				is = new FileInputStream(bookmarksFile);
 
 				int the_length = (int) bookmarksFile.length() - 2;
 				logger.log(Level.FINEST, "raw_length=" + (the_length + 2));
@@ -124,8 +125,6 @@ final class BookmarksReader {
 				logger.log(Level.FINEST, "leaving encrypted code section");
 			} else {
 				logger.log(Level.FINEST, "in decrypted code section");
-				reader = new BufferedReader(new InputStreamReader(
-						new FileInputStream(bookmarksFile), "UTF-8"));
 				InputSource inputSource = new InputSource(reader);
 				xmlReader.parse(inputSource);
 				logger.log(Level.FINEST, "leaving decrypted code section");
@@ -142,14 +141,17 @@ final class BookmarksReader {
 			throw new RuntimeException(e);
 		}
 		finally{
-			if(reader != null){
-				try{
-					reader.close();
-				}
-				catch(IOException ioe){
-					logger.log(Level.WARNING, "Unable to close bookmarks stream", ioe);
-				}
-			}
+            try{
+                if(reader != null){
+                    reader.close();
+                }
+                if (is != null){
+                    is.close();
+                }
+            }
+            catch(Throwable t){
+                logger.log(Level.WARNING, "Unable to close bookmarks stream", t);
+            }
 		}
 	}
 
