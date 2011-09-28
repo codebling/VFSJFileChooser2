@@ -38,9 +38,9 @@ import javax.swing.UIManager;
 import net.sf.vfsjfilechooser.VFSJFileChooser;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
 
 
 /**
@@ -291,6 +291,13 @@ public class BookmarksManagerPanel extends JPanel
                 }
                 else
                 {
+                    int showConfirmDialog = JOptionPane.showConfirmDialog(bDelete,
+                	    VFSResources.getMessage("VFSJFileChooser.areYouSureToDeleteConnections"),
+                	    VFSResources.getMessage("VFSJFileChooser.confirm"),JOptionPane.YES_NO_OPTION);
+                    if (showConfirmDialog==JOptionPane.NO_OPTION)
+                    {
+                	    return;
+                    }
                     for (int i = rows.length - 1; i >= 0; i--)
                     {
                         model.delete(rows[i]);

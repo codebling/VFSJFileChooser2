@@ -25,7 +25,7 @@ import net.sf.vfsjfilechooser.accessories.DefaultAccessoriesPanel;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;

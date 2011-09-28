@@ -19,7 +19,7 @@ package net.sf.vfsjfilechooser.filechooser;
 
 import net.sf.vfsjfilechooser.utils.VFSUtils;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 
 import javax.swing.Icon;
 

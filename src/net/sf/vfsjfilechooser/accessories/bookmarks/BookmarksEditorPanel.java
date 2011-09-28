@@ -214,7 +214,7 @@ public final class BookmarksEditorPanel extends JPanel {
 
 		JLabel protocolLabel = new JLabel(VFSResources
 				.getMessage("VFSJFileChooser.protocolLabelText"));
-		this.protocolList = new JComboBox<Protocol>(Protocol.values());
+		this.protocolList = new JComboBox(Protocol.values());
 		this.protocolList.setRenderer(new ProtocolRenderer());
 
 		this.usernameLabel = new JLabel(VFSResources

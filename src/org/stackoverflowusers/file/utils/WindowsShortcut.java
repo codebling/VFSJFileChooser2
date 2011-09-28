@@ -6,8 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileType;
 
 /**
  * Represents a Windows shortcut (typically visible to Java only as a '.lnk' file).
@@ -43,13 +43,12 @@ public class WindowsShortcut
      */
     public static boolean isPotentialValidLink(FileObject file) throws IOException {
         final int minimum_length = 0x64;
-        byte[] bytes = getBytes(file.getContent().getInputStream());
+        InputStream fis = file.getContent().getInputStream();
         return file.getType().equals(FileType.FILE)
             && file.getName().getExtension().toLowerCase().equals("lnk")
-            && bytes.length >= minimum_length
-            && isMagicPresent(bytes);
+            && fis.available() >= minimum_length
+            && isMagicPresent(getBytes(fis, 32));
     }
-
 
     public WindowsShortcut(File file) throws IOException, ParseException {
         parseLink(getBytes(new FileInputStream(file)));
@@ -89,15 +88,28 @@ public class WindowsShortcut
      * @throws IOException if an IOException is encountered while reading the data from the InputStream
      */
     private static byte[] getBytes(InputStream in) throws IOException {
+        return getBytes(in, null);
+    }
+    
+    /**
+     * Gets up to max bytes from an InputStream
+     * @param in the InputStream from which to read bytes
+     * @param max maximum number of bytes to read
+     * @return array of all the bytes contained in 'in'
+     * @throws IOException if an IOException is encountered while reading the data from the InputStream
+     */
+    private static byte[] getBytes(InputStream in, Integer max) throws IOException {
         // read the entire file into a byte buffer
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         byte[] buff = new byte[256];
-        while (true) {
+        while (max == null || max > 0) {
             int n = in.read(buff);
             if (n == -1) {
                 break;
             }
             bout.write(buff, 0, n);
+            if (max != null)
+                max -= n;
         }
         in.close();
         return bout.toByteArray();
@@ -106,7 +118,7 @@ public class WindowsShortcut
     private static boolean isMagicPresent(byte[] link) {
         final int magic = 0x0000004C;
         final int magic_offset = 0x00;
-        return bytesToDword(link, magic_offset) == magic;
+        return link.length >= 32 && bytesToDword(link, magic_offset) == magic;
     }
 
     /**

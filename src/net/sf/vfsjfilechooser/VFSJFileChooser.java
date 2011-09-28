@@ -47,8 +47,8 @@ import net.sf.vfsjfilechooser.plaf.AbstractVFSFileChooserUI;
 import net.sf.vfsjfilechooser.plaf.metal.MetalVFSFileChooserUI;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
 
-import org.apache.commons.vfs.FileFilter;
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileFilter;
+import org.apache.commons.vfs2.FileObject;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;

@@ -30,14 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.apache.commons.vfs.CacheStrategy;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
-import org.apache.commons.vfs.provider.sftp.SftpFileSystemConfigBuilder;
+import org.apache.commons.vfs2.CacheStrategy;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.FileType;
+import org.apache.commons.vfs2.impl.StandardFileSystemManager;
+import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.stackoverflowusers.file.utils.WindowsShortcut;
 
 
@@ -50,6 +50,7 @@ import org.stackoverflowusers.file.utils.WindowsShortcut;
  */
 public final class VFSUtils
 {
+    public static final String VFS_IDENTITIES = "vfs.Identities";
     /**
      * The number of bytes in a kilobyte.
      */
@@ -83,8 +84,6 @@ public final class VFSUtils
             "VFSJFileChooser.fileSizeMegaBytes");
     private static final String gigaByteString = VFSResources.getMessage(
             "VFSJFileChooser.fileSizeGigaBytes");
-    
-    private static String osName = null;
 
     // prevent unnecessary calls
     private VFSUtils()
@@ -466,6 +465,18 @@ public final class VFSUtils
             {
                 SftpFileSystemConfigBuilder.getInstance()
                                            .setStrictHostKeyChecking(opts, "no");
+                String idFiles = System.getProperty(VFS_IDENTITIES, "");
+                if (idFiles.length()>0)
+                {
+                    String[] split = idFiles.split(",");
+
+                    File[] identities = new File[split.length];
+                    for (int i = 0; i < identities.length; i++)
+                    {
+                        identities[i] = new File(split[i].trim());
+                    }
+                    SftpFileSystemConfigBuilder.getInstance().setIdentities(opts, identities);
+                }
             }
 
             return getFileSystemManager().resolveFile(filePath, opts);
@@ -613,7 +624,6 @@ public final class VFSUtils
         {
             return fileObject != null
                 && WindowsShortcut.isPotentialValidLink(fileObject)
-                && isWindowsOs()
                 && new WindowsShortcut(fileObject).isDirectory();
         }
         catch (IOException e)
@@ -626,20 +636,6 @@ public final class VFSUtils
         }
     }
 
-    private static String getOperatingSystemName()
-    {
-        if (osName == null)
-        {
-            osName = System.getProperty("os.name");
-        }
-        return osName;
-    }
-    
-    private static boolean isWindowsOs()
-    {
-        return getOperatingSystemName().toLowerCase().startsWith("windows");
-    }
-    
     /**
      * Tells whether a folder is the root filesystem
      * @param folder A folder

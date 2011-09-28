@@ -29,9 +29,9 @@ import net.sf.vfsjfilechooser.utils.SwingCommonsUtilities;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.provider.local.LocalFile;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.provider.local.LocalFile;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
