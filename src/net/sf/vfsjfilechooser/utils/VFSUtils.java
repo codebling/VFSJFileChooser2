@@ -479,6 +479,7 @@ public final class VFSUtils
                 }
             }
 
+            SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, false);
             return getFileSystemManager().resolveFile(filePath, opts);
         }
         catch (FileSystemException ex)
