@@ -45,8 +45,6 @@ import net.sf.vfsjfilechooser.filechooser.PopupHandler;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSURIParser;
 import net.sf.vfsjfilechooser.utils.VFSURIValidator;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
 
 /**
  * The connection dialog
@@ -414,10 +412,13 @@ public final class BookmarksEditorPanel extends JPanel {
                     errorMessage = ex.getMessage() + ex.getReason();
                 }
 
-                VFSURIValidator v = new VFSURIValidator();
-                if (!v.isValid(uri))
+                if(errorMessage == null)
                 {
-                    errorMessage = VFSResources.getMessage("VFSFileChooser.errBADURI");
+                    VFSURIValidator v = new VFSURIValidator();
+                    if (!v.isValid(uri))
+                    {
+                        errorMessage = VFSResources.getMessage("VFSFileChooser.errBADURI");
+                    }
                 }
 				if(errorMessage != null) {
 					JOptionPane.showMessageDialog(null, errorMessage);
@@ -455,7 +456,7 @@ public final class BookmarksEditorPanel extends JPanel {
 		this.protocolList.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					selectPortNumber();
+					setProtocolFieldsAndPort();
 				}
 			}
 		});
@@ -464,18 +465,18 @@ public final class BookmarksEditorPanel extends JPanel {
         this.passiveFtpOption.setSelected(true);
 	}
 
-	private void selectPortNumber() {
+	private void setProtocolFieldsAndPort() {
 		// Go and get default port number according to the selected protocol
 		Protocol protocol = (Protocol) protocolList.getSelectedItem();
 
-        Component[] nonFileComponents =
+        final Component[] nonFileComponents =
         {
             hostnameLabel, hostnameTextField, usernameLabel,
             usernameTextField, passwordLabel, passwordTextField, portLabel,
             portTextField, passiveFtpOption
         };
 
-        Component[] ftpOnlyComponents =
+        final Component[] ftpOnlyComponents =
         {
             passiveFtpOption
         };
@@ -484,24 +485,15 @@ public final class BookmarksEditorPanel extends JPanel {
         {
             enableFields(nonFileComponents, false);
             this.isPortTextFieldDirty = false;
-            return;
         }
-        else if (!protocol.toString().equals("FTP"))
+        else
         {
-            enableFields(ftpOnlyComponents, false);
-            this.isPortTextFieldDirty = false;
-            return;
-        }
-		else
-		{
-			enableFields(nonFileComponents, true);
-		}
-
-		// if user types in a port number
-		// or empties port number field
-		// then do not set protocol's default port number
-		if (isPortTextFieldDirty() && portTextField.isEditValid()) {
-			return;
+            enableFields(nonFileComponents, true);
+            if (!protocol.toString().equals("FTP"))
+            {
+                enableFields(ftpOnlyComponents, false);
+                this.isPortTextFieldDirty = false;
+            }
 		}
 
 		portTextField.setValue(protocol.getPort());
@@ -519,7 +511,7 @@ public final class BookmarksEditorPanel extends JPanel {
     {
         for (Component component : components)
         {
-            component.setVisible(b);
+            component.setEnabled(b) ;
         }
     }
 

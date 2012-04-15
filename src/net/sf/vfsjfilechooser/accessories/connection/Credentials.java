@@ -60,10 +60,22 @@ public class Credentials
      */
     public String toFileObjectURL() throws URISyntaxException
     {
+        StringBuilder userInfoBuilder = new StringBuilder();
+
+        if(username != null && !username.isEmpty())
+        {
+            userInfoBuilder.append(username);
+
+            String stringPassword = new String(password);
+            if(!stringPassword.isEmpty())
+                 userInfoBuilder.append(":").append(password);
+        }
+
+        String userInfo = userInfoBuilder.toString();
         return new URI (protocol,
-                        new StringBuffer().append(username).append(":").append(password).toString(),
+                        userInfo.isEmpty() ? null : userInfo,
                         hostname,
-                        port != -1 ? port : null,
+                        port,
                         defaulRemotetPath,
                         null,
                         null)
