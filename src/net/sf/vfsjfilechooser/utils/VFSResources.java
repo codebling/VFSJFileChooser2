@@ -103,4 +103,19 @@ public final class VFSResources
             return msg;
         }
     }
+
+    /**
+     * Gets an internationalised message and injects <pre>messageParameter</pre>, replacing instances of the tokens {1} through
+     * @param messageKey The key to translate
+     * @param messageParameters string to insert into the message, replacing occurences of the numbered tokens starting with <pre>{1}</pre>
+     * @return a translated message
+     */
+    public static String getMessage(String messageKey, String... messageParameters)
+    {
+        String message = getMessage(messageKey);
+        if(message != null)
+            for(int i = 0; i < messageParameters.length; i++)
+                message = message.replace("{"+((Integer)(i+1)).toString()+"}", messageParameters[i-1]);
+        return message;
+    }
 }

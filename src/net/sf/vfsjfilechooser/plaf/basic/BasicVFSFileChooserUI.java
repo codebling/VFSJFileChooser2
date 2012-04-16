@@ -671,6 +671,11 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
         }
     }
 
+    public String getApproveAndBookmarkButtonText(VFSJFileChooser fc)
+    {
+        return VFSResources.getMessage("VFSJFileChooser.approveAndBookmarkButtonText", getApproveButtonText(fc));
+    }
+
     // *****************************
     // ***** Directory Actions *****
     // *****************************
@@ -1079,6 +1084,20 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
             {
                 getFileChooser().changeToParentDirectory();
             }
+        }
+    }
+    protected class ApproveAndBookmarkSelectionAction extends ApproveSelectionAction
+    {
+        protected ApproveAndBookmarkSelectionAction()
+        {
+            super();
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+
+            super.actionPerformed(e);
         }
     }
 
