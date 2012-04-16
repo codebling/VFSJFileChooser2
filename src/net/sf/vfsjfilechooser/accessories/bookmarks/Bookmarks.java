@@ -66,14 +66,19 @@ public class Bookmarks extends AbstractTableModel {
 		List<TitledURLEntry> values = load();
 
 		for (TitledURLEntry entry : values) {
-			add(entry);
+			add(entry, false);
 		}
+        save();
 	}
+
+    public void add(TitledURLEntry newEntry) {
+        add(newEntry, true);
+    }
 
 	/**
 	 * @param e
 	 */
-	public void add(TitledURLEntry e) {
+	private void add(TitledURLEntry e, boolean save) {
 		synchronized (entries) {
 			entries.add(e);
 			fireTableRowsInserted(entries.size() - 1, entries.size() - 1);
@@ -88,7 +93,8 @@ public class Bookmarks extends AbstractTableModel {
 				//System.out.println("Good uri -- add");
 			}
 	 		//sl stop
-			save(); // sl
+            if(save)
+			    save(); // sl
 		}
 	}
 
@@ -290,6 +296,8 @@ public class Bookmarks extends AbstractTableModel {
 		} else if (col == COLUMN_URL_INDEX) {
 			e.setURL(value.toString());
 		}
+
+        set(row, e);
 
 		fireTableRowsUpdated(row, row);
 	}

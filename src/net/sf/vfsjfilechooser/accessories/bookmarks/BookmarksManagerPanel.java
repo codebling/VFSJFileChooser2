@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import net.sf.vfsjfilechooser.VFSJFileChooser;
 import net.sf.vfsjfilechooser.utils.VFSResources;
@@ -99,19 +101,19 @@ public class BookmarksManagerPanel extends JPanel
         bDelete = new JButton(VFSResources.getMessage(
                     "VFSJFileChooser.deleteButtonText"));
         bDelete.setIcon(new ImageIcon(getClass()
-                                          .getResource("/net/sf/vfsjfilechooser/plaf/icons/list-remove.png")));
+                .getResource("/net/sf/vfsjfilechooser/plaf/icons/list-remove.png")));
         bDelete.setHorizontalAlignment(SwingConstants.LEFT);
 
         bMoveUp = new JButton(VFSResources.getMessage(
                     "VFSJFileChooser.moveUpButtonText"));
         bMoveUp.setIcon(new ImageIcon(getClass()
-                                          .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-up.png")));
+                .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-up.png")));
         bMoveUp.setHorizontalAlignment(SwingConstants.LEFT);
 
         bMoveDown = new JButton(VFSResources.getMessage(
                     "VFSJFileChooser.moveDownButtonText"));
         bMoveDown.setIcon(new ImageIcon(getClass()
-                                            .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-down.png")));
+                .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-down.png")));
         bMoveDown.setHorizontalAlignment(SwingConstants.LEFT);
 
         final ActionHandler ah = new ActionHandler();
@@ -146,14 +148,13 @@ public class BookmarksManagerPanel extends JPanel
         add(south, BorderLayout.SOUTH);
         add(buttons, BorderLayout.EAST);
 
-        BookmarkCellEditor b = new BookmarkCellEditor(bInlineEdit);
-        table.setDefaultEditor(String.class, b);
-        table.setDefaultEditor(Object.class, b);
-        table.setCellEditor(b);
-        table.setDefaultRenderer(Object.class, new BookmarkCellRenderer());
+        table.setDefaultEditor(String.class, new DefaultCellEditor(new JTextField()));
+        //table.setDefaultEditor(Object.class, b);
+        //table.setCellEditor(b);
+        //table.setDefaultRenderer(Object.class, new BookmarkCellRenderer());
 
         setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10,
-            UIManager.getColor("Panel.background")));
+                UIManager.getColor("Panel.background")));
     }
 
     public Bookmarks getModel()
@@ -354,88 +355,4 @@ public class BookmarksManagerPanel extends JPanel
             }
         }
     } // inner class ActionHandler
-
-    public static class BookmarkCellEditor extends DefaultCellEditor
-    {
-        static JLabel borderStyleSource = new JLabel();
-        JPanel p = new JPanel();
-        static JButton b = new JButton("...");
-        JTextField tf;
-
-        public BookmarkCellEditor(JButton button)
-        {
-            super(new JTextField());
-            setClickCountToStart(1);
-            tf = (JTextField) editorComponent;
-            tf.setEditable(true);
-            tf.setBorder(borderStyleSource.getBorder());
-
-            p.setLayout(new GridBagLayout());
-            GridBagConstraints c = new GridBagConstraints();
-
-            c.gridx = 0;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.LINE_START;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.weightx = 1.0;
-            c.ipadx = 0;
-            c.insets = new Insets(0, 0, 0, 0);
-            p.add(tf, c);
-            
-            c.gridx = 1;
-            c.anchor = GridBagConstraints.LINE_END;
-            c.fill = GridBagConstraints.NONE;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.weightx = 0.0;
-            p.add(b, c);
-        }
-
-        @Override
-        public Component getComponent()
-        {
-            return p;
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
-        {
-            if (value instanceof String)
-            {
-                tf.setText((String)value);
-                b.setVisible(isSelected && column == 1);
-            }
-            return getComponent();
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return tf.getText();
-        }
-
-
-    }
-    
-    public class BookmarkCellRenderer extends DefaultTableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table,
-                                                       Object value,
-                                                       boolean isSelected,
-                                                       boolean hasFocus,
-                                                       int row,
-                                                       int column)
-        {
-            return new BookmarkCellEditor(null).getTableCellEditorComponent(table, value, isSelected, row, column);
-                /*
-                super.getTableCellRendererComponent(table,
-                value,
-                isSelected,
-                hasFocus,
-                row,
-                column);    //To change body of overridden methods use File | Settings | File Templates.
-                */
-        }
-    }
 }
