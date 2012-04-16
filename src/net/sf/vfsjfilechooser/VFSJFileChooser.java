@@ -22,6 +22,7 @@ import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.ACCEPT_A
 import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.ACCESSORY_CHANGED_PROPERTY;
 import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY;
 import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY;
+import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.APPROVE_THEN_BOOKMARK_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY;
 import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY;
 import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.APPROVE_SELECTION;
 import static net.sf.vfsjfilechooser.constants.VFSJFileChooserConstants.CANCEL_SELECTION;
@@ -113,6 +114,7 @@ public class VFSJFileChooser extends JComponent implements Accessible
     // ******************************
     private String dialogTitle = null;
     private String approveButtonText = null;
+    private String approveThenBookmarkButtonToolTipText = null;
     private String approveButtonToolTipText = null;
     private int approveButtonMnemonic = 0;
     private List<AbstractVFSFileFilter> filters = new CopyOnWriteArrayList<AbstractVFSFileFilter>();
@@ -942,6 +944,35 @@ public class VFSJFileChooser extends JComponent implements Accessible
      * @see #setDialogType
      * @see #showDialog
      */
+    public void setApproveThenBookmarkButtonToolTipText(String toolTipText)
+    {
+        if ((this.approveThenBookmarkButtonToolTipText == toolTipText) ||
+                ((this.approveThenBookmarkButtonToolTipText != null) &&
+                        this.approveThenBookmarkButtonToolTipText.equals(toolTipText)))
+        {
+            return;
+        }
+
+        String oldValue = approveThenBookmarkButtonToolTipText;
+        approveThenBookmarkButtonToolTipText = toolTipText;
+        firePropertyChange(APPROVE_THEN_BOOKMARK_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY,
+                           oldValue, approveThenBookmarkButtonToolTipText);
+    }
+
+    /**
+     * Sets the tooltip text used in the <code>ApproveButton</code>.
+     * If <code>null</code>, the UI object will determine the button's text.
+     *
+     * @beaninfo
+     *   preferred: true
+     *       bound: true
+     * description: The tooltip text for the ApproveButton.
+     *
+     * @param toolTipText the tooltip text for the approve button
+     * @see #setApproveButtonText
+     * @see #setDialogType
+     * @see #showDialog
+     */
     public void setApproveButtonToolTipText(String toolTipText)
     {
         if ((this.approveButtonToolTipText == toolTipText) ||
@@ -955,6 +986,21 @@ public class VFSJFileChooser extends JComponent implements Accessible
         approveButtonToolTipText = toolTipText;
         firePropertyChange(APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY,
             oldValue, approveButtonToolTipText);
+    }
+
+    /**
+     * Returns the tooltip text used in the <code>ApproveButton</code>.
+     * If <code>null</code>, the UI object will determine the button's text.
+     *
+     * @return the tooltip text used for the approve button
+     *
+     * @see #setApproveButtonText
+     * @see #setDialogType
+     * @see #showDialog
+     */
+    public String getApproveThenBookmarkButtonToolTipText()
+    {
+        return approveThenBookmarkButtonToolTipText;
     }
 
     /**
