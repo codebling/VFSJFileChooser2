@@ -17,24 +17,14 @@
  */
 package net.sf.vfsjfilechooser.accessories.bookmarks;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
+
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import net.sf.vfsjfilechooser.VFSJFileChooser;
 import net.sf.vfsjfilechooser.utils.VFSResources;
 import net.sf.vfsjfilechooser.utils.VFSUtils;
@@ -59,6 +49,7 @@ public class BookmarksManagerPanel extends JPanel
     private JButton bOpen;
     private JButton bCancel;
     private JButton bEdit;
+    private JButton bInlineEdit;
     private JButton bAdd;
     private JButton bDelete;
     private JButton bMoveUp;
@@ -105,22 +96,24 @@ public class BookmarksManagerPanel extends JPanel
                                         .getResource("/net/sf/vfsjfilechooser/plaf/icons/book_edit.png")));
         bEdit.setHorizontalAlignment(SwingConstants.LEFT);
 
+        bInlineEdit = new JButton("...");
+
         bDelete = new JButton(VFSResources.getMessage(
                     "VFSJFileChooser.deleteButtonText"));
         bDelete.setIcon(new ImageIcon(getClass()
-                                          .getResource("/net/sf/vfsjfilechooser/plaf/icons/list-remove.png")));
+                .getResource("/net/sf/vfsjfilechooser/plaf/icons/list-remove.png")));
         bDelete.setHorizontalAlignment(SwingConstants.LEFT);
 
         bMoveUp = new JButton(VFSResources.getMessage(
                     "VFSJFileChooser.moveUpButtonText"));
         bMoveUp.setIcon(new ImageIcon(getClass()
-                                          .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-up.png")));
+                .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-up.png")));
         bMoveUp.setHorizontalAlignment(SwingConstants.LEFT);
 
         bMoveDown = new JButton(VFSResources.getMessage(
                     "VFSJFileChooser.moveDownButtonText"));
         bMoveDown.setIcon(new ImageIcon(getClass()
-                                            .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-down.png")));
+                .getResource("/net/sf/vfsjfilechooser/plaf/icons/go-down.png")));
         bMoveDown.setHorizontalAlignment(SwingConstants.LEFT);
 
         final ActionHandler ah = new ActionHandler();
@@ -128,6 +121,7 @@ public class BookmarksManagerPanel extends JPanel
         bOpen.addActionListener(ah);
         bCancel.addActionListener(ah);
         bEdit.addActionListener(ah);
+        bInlineEdit.addActionListener(ah);
         bAdd.addActionListener(ah);
         bDelete.addActionListener(ah);
         bMoveUp.addActionListener(ah);
@@ -138,7 +132,7 @@ public class BookmarksManagerPanel extends JPanel
         south.add(bCancel);
         south.add(Box.createHorizontalGlue());
 
-        final JPanel buttons = new JPanel(new GridLayout(0, 1, 5, 5));
+        final JPanel buttons = new JPanel(new GridLayout(0, 1, 3, 3));
 
         buttons.add(bAdd);
         buttons.add(bEdit);
@@ -148,15 +142,16 @@ public class BookmarksManagerPanel extends JPanel
         buttons.add(bMoveUp);
         buttons.add(bMoveDown);
 
-        JPanel east = new JPanel();
-        east.add(buttons, BorderLayout.NORTH);
-        east.add(new JPanel(), BorderLayout.CENTER); // don't ask
-
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout(10, 3));
 
         add(scrollPane, BorderLayout.CENTER);
         add(south, BorderLayout.SOUTH);
-        add(east, BorderLayout.EAST);
+        add(buttons, BorderLayout.EAST);
+
+        table.setDefaultEditor(String.class, new DefaultCellEditor(new JTextField()));
+        //table.setDefaultEditor(Object.class, b);
+        //table.setCellEditor(b);
+        //table.setDefaultRenderer(Object.class, new BookmarkCellRenderer());
 
         setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10,
                 UIManager.getColor("Panel.background")));
@@ -184,7 +179,7 @@ public class BookmarksManagerPanel extends JPanel
             {
                 parentDialog.showEditorView(NO_BOOKMARK_SELECTION_INDEX);
             }
-            else if (button.equals(bEdit))
+            else if (button.equals(bEdit) || button.equals(bInlineEdit))
             {
                 if (row != NO_BOOKMARK_SELECTION_INDEX)
                 {
