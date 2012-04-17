@@ -123,7 +123,7 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
     private JToggleButton detailsViewButton;
     private boolean useShellFolder;
     private JButton approveButton;
-    private JButton approveAndBookmarkButton;
+    private JButton approveThenBookmarkButton;
     private JButton cancelButton;
     private JPanel buttonPanel;
     private JPanel bottomPanel;
@@ -145,9 +145,9 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
     private String listViewButtonAccessibleName = null;
     private String detailsViewButtonToolTipText = null;
     private String detailsViewButtonAccessibleName = null;
-    private String approveAndBookmarkButtonText = null;
-    private String approveAndBookmarkButtonToolTipText = null;
-    private String approveAndBookmarkButtonAccessibleName = null;
+    private String approveThenBookmarkButtonText = null;
+    private String approveThenBookmarkButtonToolTipText = null;
+    private String approveThenBookmarkButtonAccessibleName = null;
     private VFSJFileChooser chooser;
     private AlignedLabel fileNameLabel;
     private JPanel topButtonPanel;
@@ -466,11 +466,11 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
         // buttons
         getButtonPanel().setLayout(new ButtonAreaLayout());
 
-        approveAndBookmarkButton = new JButton(getApproveAndBookmarkButtonText(fc));
+        approveThenBookmarkButton = new JButton(getApproveThenBookmarkButtonText(fc));
         // Note: Metal does not use mnemonics for approve and cancel
-        approveAndBookmarkButton.addActionListener(getApproveAndBookmarkSelectionAction());
-        approveAndBookmarkButton.setToolTipText(getApproveAndBookmarkButtonToolTipText(fc));
-        getButtonPanel().add(approveAndBookmarkButton);
+        approveThenBookmarkButton.addActionListener(getApproveThenBookmarkSelectionAction());
+        approveThenBookmarkButton.setToolTipText(getApproveThenBookmarkButtonToolTipText(fc));
+        getButtonPanel().add(approveThenBookmarkButton);
 
         approveButton = new JButton(getApproveButtonText(fc));
         // Note: Metal does not use mnemonics for approve and cancel
@@ -635,7 +635,7 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
         c.removePropertyChangeListener(filterComboBoxModel);
         c.removePropertyChangeListener(filePane);
         cancelButton.removeActionListener(getCancelSelectionAction());
-        this.approveAndBookmarkButton.removeActionListener(getApproveSelectionAction());
+        this.approveThenBookmarkButton.removeActionListener(getApproveSelectionAction());
         fileNameTextField.removeActionListener(getApproveSelectionAction());
 
         if (filePane != null)
@@ -896,15 +896,15 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
     private void doApproveButtonTextChanged(PropertyChangeEvent e)
     {
         VFSJFileChooser m_chooser = getFileChooser();
-        this.approveAndBookmarkButton.setText(getApproveButtonText(m_chooser));
-        this.approveAndBookmarkButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
+        this.approveThenBookmarkButton.setText(getApproveButtonText(m_chooser));
+        this.approveThenBookmarkButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
     }
 
     private void doDialogTypeChanged(PropertyChangeEvent e)
     {
         VFSJFileChooser m_chooser = getFileChooser();
-        this.approveAndBookmarkButton.setText(getApproveButtonText(m_chooser));
-        this.approveAndBookmarkButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
+        this.approveThenBookmarkButton.setText(getApproveButtonText(m_chooser));
+        this.approveThenBookmarkButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
 
         if (m_chooser.getDialogType() == DIALOG_TYPE.SAVE)
         {
@@ -1092,18 +1092,18 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
 
         if (directorySelected)
         {
-            if (this.approveAndBookmarkButton != null)
+            if (this.approveThenBookmarkButton != null)
             {
-                this.approveAndBookmarkButton.setText(directoryOpenButtonText);
-                this.approveAndBookmarkButton.setToolTipText(directoryOpenButtonToolTipText);
+                this.approveThenBookmarkButton.setText(directoryOpenButtonText);
+                this.approveThenBookmarkButton.setToolTipText(directoryOpenButtonToolTipText);
             }
         }
         else
         {
-            if (this.approveAndBookmarkButton != null)
+            if (this.approveThenBookmarkButton != null)
             {
-                this.approveAndBookmarkButton.setText(getApproveButtonText(chooser));
-                this.approveAndBookmarkButton.setToolTipText(getApproveButtonToolTipText(
+                this.approveThenBookmarkButton.setText(getApproveButtonText(chooser));
+                this.approveThenBookmarkButton.setToolTipText(getApproveButtonToolTipText(
                         chooser));
             }
         }
@@ -1179,7 +1179,7 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
     @Override
     protected JButton getApproveButton(VFSJFileChooser fc)
     {
-        return this.approveAndBookmarkButton;
+        return this.approveThenBookmarkButton;
     }
 
     private static void groupLabels(AlignedLabel[] group)

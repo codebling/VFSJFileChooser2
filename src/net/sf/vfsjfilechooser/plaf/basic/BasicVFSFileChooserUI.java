@@ -124,6 +124,7 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
     private String saveDialogTitleText = null;
     protected String saveButtonToolTipText = null;
     protected String openButtonToolTipText = null;
+    protected String approveThenBookmarkButtonToolTipText = null;
     protected String cancelButtonToolTipText = null;
     protected String updateButtonToolTipText = null;
     protected String helpButtonToolTipText = null;
@@ -137,6 +138,7 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
     protected String directoryOpenButtonToolTipText = null;
 
     // Some generic FileChooser functions
+    private Action approveThenBookmarkSelectionAction = new ApproveThenBookmarkSelectionAction();
     private Action approveSelectionAction = new ApproveSelectionAction();
     private Action cancelSelectionAction = new CancelSelectionAction();
     private Action updateAction = new UpdateAction();
@@ -457,6 +459,18 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
         return null;
     }
 
+    public String getApproveThenBookmarkButtonToolTipText(VFSJFileChooser fc)
+    {
+        String tooltipText = fc.getApproveThenBookmarkButtonToolTipText();
+
+        if (tooltipText != null)
+        {
+            return tooltipText;
+        }
+
+        return approveThenBookmarkButtonToolTipText;
+    }
+
     public String getApproveButtonToolTipText(VFSJFileChooser fc)
     {
         String tooltipText = fc.getApproveButtonToolTipText();
@@ -671,9 +685,9 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
         }
     }
 
-    public String getApproveAndBookmarkButtonText(VFSJFileChooser fc)
+    public String getApproveThenBookmarkButtonText(VFSJFileChooser fc)
     {
-        return VFSResources.getMessage("VFSJFileChooser.approveAndBookmarkButtonText", getApproveButtonText(fc));
+        return VFSResources.getMessage("VFSJFileChooser.approveThenBookmarkButtonText", getApproveButtonText(fc));
     }
 
     // *****************************
@@ -704,6 +718,11 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
     public Action getChangeToParentDirectoryAction()
     {
         return changeToParentDirectoryAction;
+    }
+
+    public Action getApproveThenBookmarkSelectionAction()
+    {
+        return approveThenBookmarkSelectionAction;
     }
 
     public Action getApproveSelectionAction()
@@ -1086,9 +1105,9 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
             }
         }
     }
-    protected class ApproveAndBookmarkSelectionAction extends ApproveSelectionAction
+    protected class ApproveThenBookmarkSelectionAction extends ApproveSelectionAction
     {
-        protected ApproveAndBookmarkSelectionAction()
+        protected ApproveThenBookmarkSelectionAction()
         {
             super();
         }
@@ -1096,6 +1115,7 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
         @Override
         public void actionPerformed(ActionEvent e)
         {
+
 
             super.actionPerformed(e);
         }
