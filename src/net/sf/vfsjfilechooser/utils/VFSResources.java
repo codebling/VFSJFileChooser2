@@ -115,7 +115,7 @@ public final class VFSResources
         String message = getMessage(messageKey);
         if(message != null)
             for(int i = 0; i < messageParameters.length; i++)
-                message = message.replace("{"+((Integer)(i+1)).toString()+"}", messageParameters[i-1]);
+                message = message.replace("{"+((Integer)(i+1)).toString()+"}", messageParameters[i]);
         return message;
     }
 }

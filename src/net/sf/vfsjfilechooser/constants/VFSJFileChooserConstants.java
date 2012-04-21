@@ -63,16 +63,19 @@ public final class VFSJFileChooserConstants
     /** Identifies change in the text on the approve (yes, ok) button. */
     public static final String APPROVE_BUTTON_TEXT_CHANGED_PROPERTY = "ApproveButtonTextChangedProperty";
 
-    /**
-     * Identifies change in the tooltip text for the approve then bookmark button.
-     */
-    public static final String APPROVE_THEN_BOOKMARK_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY = "ApproveThenBookmarkButtonToolTipTextChangedProperty";
+    /** Identifies change in the text on the approve (yes, ok) button. */
+    public static final String APPROVE_THEN_BOOKMARK_BUTTON_TEXT_CHANGED_PROPERTY = "ApproveThenBookmarkButtonTextChangedProperty";
 
     /**
      * Identifies change in the tooltip text for the approve (yes, ok)
      * button.
      */
     public static final String APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY = "ApproveButtonToolTipTextChangedProperty";
+
+    /**
+     * Identifies change in the tooltip text for the approve then bookmark button.
+     */
+    public static final String APPROVE_THEN_BOOKMARK_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY = "ApproveThenBookmarkButtonToolTipTextChangedProperty";
 
     /** Identifies change in the mnemonic for the approve (yes, ok) button. */
     public static final String APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY = "ApproveButtonMnemonicChangedProperty";

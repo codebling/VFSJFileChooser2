@@ -896,15 +896,24 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
     private void doApproveButtonTextChanged(PropertyChangeEvent e)
     {
         VFSJFileChooser m_chooser = getFileChooser();
-        this.approveThenBookmarkButton.setText(getApproveButtonText(m_chooser));
-        this.approveThenBookmarkButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
+        approveButton.setText(getApproveButtonText(m_chooser));
+        approveButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
+    }
+
+    private void doApproveThenBookmarkButtonTextChanged(PropertyChangeEvent e)
+    {
+        VFSJFileChooser m_chooser = getFileChooser();
+        approveThenBookmarkButton.setText(getApproveThenBookmarkButtonText(m_chooser));
+        approveThenBookmarkButton.setToolTipText(getApproveThenBookmarkButtonToolTipText(m_chooser));
     }
 
     private void doDialogTypeChanged(PropertyChangeEvent e)
     {
         VFSJFileChooser m_chooser = getFileChooser();
-        this.approveThenBookmarkButton.setText(getApproveButtonText(m_chooser));
-        this.approveThenBookmarkButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
+        approveButton.setText(getApproveButtonText(m_chooser));
+        approveButton.setToolTipText(getApproveButtonToolTipText(m_chooser));
+        approveThenBookmarkButton.setText(getApproveThenBookmarkButtonText(m_chooser));
+        approveThenBookmarkButton.setToolTipText(getApproveThenBookmarkButtonToolTipText(m_chooser));
 
         if (m_chooser.getDialogType() == DIALOG_TYPE.SAVE)
         {
@@ -983,6 +992,13 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
                                 VFSJFileChooserConstants.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY))
                     {
                         doApproveButtonTextChanged(e);
+                    }
+                    else if (s.equals(
+                                VFSJFileChooserConstants.APPROVE_THEN_BOOKMARK_BUTTON_TEXT_CHANGED_PROPERTY) ||
+                            s.equals(
+                                VFSJFileChooserConstants.APPROVE_THEN_BOOKMARK_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY))
+                    {
+                        doApproveThenBookmarkButtonTextChanged(e);
                     }
                     else if (s.equals(
                                 VFSJFileChooserConstants.DIALOG_TYPE_CHANGED_PROPERTY))
@@ -1102,8 +1118,8 @@ public class MetalVFSFileChooserUI extends BasicVFSFileChooserUI
         {
             if (this.approveThenBookmarkButton != null)
             {
-                this.approveThenBookmarkButton.setText(getApproveButtonText(chooser));
-                this.approveThenBookmarkButton.setToolTipText(getApproveButtonToolTipText(
+                this.approveThenBookmarkButton.setText(getApproveThenBookmarkButtonText(chooser));
+                this.approveThenBookmarkButton.setToolTipText(getApproveThenBookmarkButtonToolTipText(
                         chooser));
             }
         }

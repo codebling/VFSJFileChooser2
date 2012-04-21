@@ -20,6 +20,9 @@ package net.sf.vfsjfilechooser.plaf.basic;
 import net.sf.vfsjfilechooser.VFSJFileChooser;
 import net.sf.vfsjfilechooser.VFSJFileChooser.DIALOG_TYPE;
 import net.sf.vfsjfilechooser.VFSJFileChooser.SELECTION_MODE;
+import net.sf.vfsjfilechooser.accessories.DefaultAccessoriesPanel;
+import net.sf.vfsjfilechooser.accessories.bookmarks.Bookmarks;
+import net.sf.vfsjfilechooser.accessories.bookmarks.TitledURLEntry;
 import net.sf.vfsjfilechooser.filechooser.AbstractVFSFileFilter;
 import net.sf.vfsjfilechooser.filechooser.AbstractVFSFileSystemView;
 import net.sf.vfsjfilechooser.filechooser.AbstractVFSFileView;
@@ -1115,9 +1118,25 @@ public class BasicVFSFileChooserUI extends AbstractVFSFileChooserUI
         @Override
         public void actionPerformed(ActionEvent e)
         {
-
-
             super.actionPerformed(e);
+
+            FileObject[] selectedFiles = getFileChooser().getSelectedFiles();
+            if(selectedFiles.length > 0)
+                for(FileObject f : selectedFiles)
+                        addToBookmarks(f);
+            else
+                    addToBookmarks(getFileChooser().getSelectedFile());
+        }
+
+        private void addToBookmarks(FileObject file)
+        {
+            if(getFileChooser().getAccessory() instanceof DefaultAccessoriesPanel)
+            {
+                Bookmarks bookmarks = ((DefaultAccessoriesPanel) getFileChooser().getAccessory())
+                                        .getBookmarksDialog().getBookmarks();
+                TitledURLEntry entry = new TitledURLEntry(file.getName().getBaseName(), file.getName().getURI());
+                bookmarks.add(entry);
+            }
         }
     }
 
