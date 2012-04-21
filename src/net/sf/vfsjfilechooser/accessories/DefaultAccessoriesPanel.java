@@ -136,6 +136,11 @@ public final class DefaultAccessoriesPanel extends JComponent
         connectionDialog = new ConnectionDialog(c, bookmarksDialog, fileChooser);
     }
 
+    public BookmarksDialog getBookmarksDialog()
+    {
+        return bookmarksDialog;
+    }
+
     /**
      * Action to display the connection wizard dialog
      */
